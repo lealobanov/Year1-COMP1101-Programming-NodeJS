@@ -1,0 +1,21 @@
+{
+  "name": "progsummative0205",
+  "version": "1.0.0",
+  "description": "Programming summative assignment 02/05",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "express-session": "^1.16.1",
+    "firebase": "^5.10.1",
+    "jest": "^24.7.1",
+    "nodemon": "^1.18.11",
+    "supertest": "^4.0.2"
+  }
+}

@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang=“en”>
+  
+<head>
+<meta charset = “utf-8”>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+
+<script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-auth.js"></script>
+
+<script>
+//Initialize Firebase authentication
+const config = {
+	apiKey: "AIzaSyDHnMD4FJcvRcy2NsVKRJ-FGHT_geeC2O8",
+	authDomain: "prog-web-app-beacc.firebaseapp.com",
+	databaseURL: "https://prog-web-app-beacc.firebaseio.com",
+	projectId: "prog-web-app-beacc",
+	storageBucket: "prog-web-app-beacc.appspot.com",
+	messagingSenderId: "40206756427"
+};
+firebase.initializeApp(config);
+const auth = firebase.auth();
+</script>
+
+<title>MyForum</title>
+</head>
+
+<body>
+
+<!-- Navigation Bar-->
+<nav class="navbar navbar-expand-sm bg-light">
+
+  <!-- Links -->
+  <ul class="navbar-nav">
+    <li class="nav-item"><strong>
+      <a href="#"  class="nav-link" style="color:#008080;">MyForum</a>
+    </li></strong>
+		<li class="nav-item">
+      <a href="#userdirectory" class="btn btn-info" data-toggle="modal" data-target="#userdirectory" role="button" id ="listusers" style=" margin-right:7px;">User Directory</a> 
+		</li>
+		<li class="nav-item">
+				<a href="#postlibrary" class="btn btn-info" data-toggle="modal" data-target="#postlibrary" role="button" id ="listposts" style=" margin-right:7px;">Post Library</a> 
+			</li>
+		<li class="nav-item">
+      <a href="#login" data-toggle="modal" data-target="#login" class="btn btn-info" role="button" style=" margin-right:7px;">Login</a>
+    </li>
+    <li class="nav-item">
+      <a href="#register" data-toggle="modal" data-target="#register" class="btn btn-info" role="button" style=" margin-right:7px;">Register</a> 
+		</li>
+		<li class="nav-item">
+      <a href="#logout" class="btn btn-info d-none" role="button" id ="btnLogout">Logout</a> 
+		</li>
+  </ul>
+
+</nav>
+
+<!-- Login Modal-->
+<div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Login</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Body -->
+				<div class="modal-body">
+            <p style="font-size:16px; margin-top:15px;">If you are an existing user, please login below.</p>
+					<form id="form_login" action="http://127.0.0.1:8090">
+						<div class="form-group">
+							<input type="email" class="form-control" placeholder="Email" id="username_login">
+						</div>
+						<div class="form-group">
+							<input type="password" class="form-control" placeholder="Password" id="password_login">	
+						</div>
+						<!--alert if failed login-->
+						<button id="btnLogin" type="submit" class="btn btn-info">Log In</button>
+					</form>
+				</div>
+
+				<!-- Footer -->
+				<div class="modal-footer">
+          <p style="font-size:16px; margin-top:12px;">Not yet registered with MyForum?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#register">Create an Account</button>
+				</div>
+			</div>
+		</div>
+  </div>
+  
+<!-- User Registration Modal-->
+<div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">User Registration</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Body -->
+				<div class="modal-body">
+            <p style="font-size:16px; margin-top:15px;">Not yet registered? To access our services, create an account with MyForum.</p>
+					<form id="form_register" action="http://127.0.0.1:8090">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="First Name" id="first_reg">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Last Name" id="last_reg">
+            </div>
+            <div class="form-group">
+                <input type="email" class="form-control" placeholder="Email" id="username_reg">
+							</div>
+							<div class="form-group">
+									<textarea class="form-control" rows="3" placeholder="Profile Bio" id="bio_reg"></textarea>
+								</div>
+            <div class="form-group">
+              <input type="password" class="form-control" placeholder="Password" id="password_reg">  
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control" placeholder="Confirm Password" id="confirmpass_reg">      
+            </div>
+						<!--alert if registration failed-->
+						<button id="btnRegister" type="submit" class="btn btn-info">Register</button>
+					</form>
+				</div>
+
+				<!-- Footer -->
+				<div class="modal-footer">
+          <p style="font-size:16px; margin-top:12px;">Already have a MyForum account?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#login">Login</button>
+				</div>
+			</div>
+		</div>
+  </div>
+
+<!-- Create Post Modal-->
+<div class="modal fade" id="createpost" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" style="width:900px;">
+			<div class="modal-content">
+
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Create a New Post</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Body -->
+				<div class="modal-body">
+            <p style="font-size:16px; margin-top:15px;">Create a new post on MyForum.</p>
+					<form id="form_create_post" action="http://127.0.0.1:8090">
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="Post Title" id="post_title">
+						</div>
+						<div class="form-group">
+								<input type="date" class="form-control" placeholder="Date (yyyy-mm-dd)" id="date">	
+							</div>
+						<div class="form-group">
+								<textarea class="form-control" rows="5" placeholder="Enter post content..." id="post_content"></textarea>
+							</div>
+					
+						<!--alert if failed login-->
+						<button type="submit" id="submit" class="btn btn-info">Create Post</button>
+					</form>
+				</div>
+
+				<!-- Footer -->
+				<div class="modal-footer">
+				</div>
+			</div>
+		</div>
+  </div>
+  
+<!-- Commenting Modal-->
+<div class="modal fade" id="add_comment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Add Comment</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Body -->
+				<div class="modal-body">
+            <p style="font-size:16px; margin-top:15px;">Comment on an existing post.</p>
+					<form id="add_comment" action="http://127.0.0.1:8090">
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="Username" id="username_login">
+						</div>
+						<div class="form-group">
+								<textarea class="form-control" rows="5" placeholder="Comment" id="comment"></textarea>
+							</div>
+						<!--alert if failed to add comment-->
+						<button type="submit" class="btn btn-info">Add Comment</button>
+					</form>
+				</div>
+
+				<!-- Footer -->
+				<div class="modal-footer">
+          <p style="font-size:16px; margin-top:12px;">Want to create a new post?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#createpost">Create New Post</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- User Directory Modal-->
+<div class="modal fade" id="userdirectory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<!-- Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">User Directory</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+
+			<!-- Body -->
+			<div class="modal-body">
+					<p style="font-size:16px; margin-top:15px;">Discover current MyForum users.</p>
+					<div id="usercontent"></div>	
+			</div>
+
+			<!-- Footer -->
+			<div class="modal-footer">
+				<p style="font-size:16px; margin-top:12px;">Not yet registered with MyForum?</p>
+				<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#register">Create an Account</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Post Library Modal-->
+<div class="modal fade" id="postlibrary" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" style="width:900px;">
+			<div class="modal-content">
+	
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Post Library</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+	
+				<!-- Body -->
+				<div class="modal-body">
+						<p style="font-size:16px; margin-top:15px;">View all MyForum posts.</p>
+						<div id="postlistcontent"></div>	
+				</div>
+	
+				<!-- Footer -->
+				<div class="modal-footer">
+					<p style="font-size:16px; margin-top:12px;">Want to create a new post?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#createpost">Create New Post</button>
+				</div>
+			</div>
+		</div>
+	</div>
+  
+<section id="frontend">
+
+<div class= "jumbotron text-center">
+<h1>Welcome to MyForum!</h1>
+<br>
+<p>Lorem ipsum describing forum services. Directing users to create an account and login.</p> 
+</div>
+</section>
+
+<section id="posts" class="container" style="margin-top: 40px;">
+		<h2>Post Feed</h2>
+		<p>View the latest posts on MyForum by refreshing the post feed.</p>
+		<div class="col-sm-12 float-left ">
+				<div class="btn-group">
+				<div class="refreshpostfeed">
+						<button id="postfeed" class="btn btn-info lg"  style="margin-left:-20px;">Refresh Post Feed</button>
+					</div>
+			<div class="createnewpost">
+				<button id="createnewpostmodal" class="btn btn-info lg" data-toggle="modal" data-target="#createpost" style="margin-left:20px;">Create New Post</button>
+			</div>
+				</div>
+			<div class="overflow">
+					<div id="listallpostcontent">
+						</div>
+			</div>
+		</div>
+		
+</section>
+
+
+<script src="index.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>
