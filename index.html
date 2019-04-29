@@ -36,7 +36,7 @@ const auth = firebase.auth();
   <!-- Links -->
   <ul class="navbar-nav">
     <li class="nav-item"><strong>
-      <a href="#"  class="nav-link" style="color:#008080;">MyForum</a>
+      <a href=""  class="nav-link" style="color:#008080;">MyForum</a>
     </li></strong>
 		<li class="nav-item">
       <a href="#userdirectory" class="btn btn-info" data-toggle="modal" data-target="#userdirectory" role="button" id ="listusers" style=" margin-right:7px;">User Directory</a> 
@@ -45,16 +45,18 @@ const auth = firebase.auth();
 				<a href="#postlibrary" class="btn btn-info" data-toggle="modal" data-target="#postlibrary" role="button" id ="listposts" style=" margin-right:7px;">Post Library</a> 
 			</li>
 		<li class="nav-item">
-      <a href="#login" data-toggle="modal" data-target="#login" class="btn btn-info" role="button" style=" margin-right:7px;">Login</a>
+					<a href="#myposts" class="btn btn-info d-none" data-toggle="modal" data-target="#myposts" role="button" id ="mypostsbtn" style=" margin-right:7px;">My Posts</a> 
+			</li>
+		<li class="nav-item">
+      <a href="#login" data-toggle="modal" data-target="#login" class="btn btn-info" role="button" id="loginnavbutton" style=" margin-right:7px;">Login</a>
     </li>
     <li class="nav-item">
-      <a href="#register" data-toggle="modal" data-target="#register" class="btn btn-info" role="button" style=" margin-right:7px;">Register</a> 
+      <a href="#register" data-toggle="modal" data-target="#register" class="btn btn-info" role="button" id = "regnavbutton" style=" margin-right:7px;">Register</a> 
 		</li>
 		<li class="nav-item">
-      <a href="#logout" class="btn btn-info d-none" role="button" id ="btnLogout">Logout</a> 
+      <a href="" class="btn btn-info d-none" role="button" id ="btnLogout">Logout</a> 
 		</li>
   </ul>
-
 </nav>
 
 <!-- Login Modal-->
@@ -79,7 +81,7 @@ const auth = firebase.auth();
 							<input type="password" class="form-control" placeholder="Password" id="password_login">	
 						</div>
 						<!--alert if failed login-->
-						<button id="btnLogin" type="submit" class="btn btn-info">Log In</button>
+						<button id="btnLogin" type="submit" class="btn btn-info" data-dismiss="modal">Log In</button>
 					</form>
 				</div>
 
@@ -90,7 +92,7 @@ const auth = firebase.auth();
 				</div>
 			</div>
 		</div>
-  </div>
+	</div>
   
 <!-- User Registration Modal-->
 <div class="modal fade" id="register" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -126,7 +128,7 @@ const auth = firebase.auth();
               <input type="password" class="form-control" placeholder="Confirm Password" id="confirmpass_reg">      
             </div>
 						<!--alert if registration failed-->
-						<button id="btnRegister" type="submit" class="btn btn-info">Register</button>
+						<button id="btnRegister" type="submit" class="btn btn-info" >Register</button>
 					</form>
 				</div>
 
@@ -165,7 +167,7 @@ const auth = firebase.auth();
 							</div>
 					
 						<!--alert if failed login-->
-						<button type="submit" id="submit" class="btn btn-info">Create Post</button>
+						<button type="submit" id="submit" class="btn btn-info" >Create Post</button>
 					</form>
 				</div>
 
@@ -175,45 +177,10 @@ const auth = firebase.auth();
 			</div>
 		</div>
   </div>
-  
-<!-- Commenting Modal-->
-<div class="modal fade" id="add_comment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-
-				<!-- Header -->
-				<div class="modal-header">
-					<h4 class="modal-title">Add Comment</h4>
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-				</div>
-
-				<!-- Body -->
-				<div class="modal-body">
-            <p style="font-size:16px; margin-top:15px;">Comment on an existing post.</p>
-					<form id="add_comment" action="http://127.0.0.1:8090">
-						<div class="form-group">
-							<input type="text" class="form-control" placeholder="Username" id="username_login">
-						</div>
-						<div class="form-group">
-								<textarea class="form-control" rows="5" placeholder="Comment" id="comment"></textarea>
-							</div>
-						<!--alert if failed to add comment-->
-						<button type="submit" class="btn btn-info">Add Comment</button>
-					</form>
-				</div>
-
-				<!-- Footer -->
-				<div class="modal-footer">
-          <p style="font-size:16px; margin-top:12px;">Want to create a new post?</p>
-					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#createpost">Create New Post</button>
-				</div>
-			</div>
-		</div>
-	</div>
 
 <!-- User Directory Modal-->
 <div class="modal fade" id="userdirectory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 
 			<!-- Header -->
@@ -225,9 +192,98 @@ const auth = firebase.auth();
 			<!-- Body -->
 			<div class="modal-body">
 					<p style="font-size:16px; margin-top:15px;">Discover current MyForum users.</p>
+					<label for="usersearchquery"><strong>Enter a search query:</strong></label>
+						<input type="text" id="usersearchquery"size="35"><br>
+						<button class="btn btn-info" id="useremailsearchbtn" style="margin-right: 5px; margin-top:7px;" onclick="searchUsersbyEmail()" data-dismiss="modal" data-toggle="modal" data-target="#searchresults_useremail">Search by Email Address</button>
+						<button class="btn btn-info" id="userfnamesearchbtn" style="margin-top:7px;"onclick="searchUsersbyFName()"data-dismiss="modal" data-toggle="modal" data-target="#searchresults_userfname">Search by First Name</button>
+						<button class="btn btn-info" id="userlnamesearchbtn" style="margin-top:7px;"onclick="searchUsersbyLName()"data-dismiss="modal" data-toggle="modal" data-target="#searchresults_userlname">Search by Last Name</button>
 					<div id="usercontent"></div>	
+					
 			</div>
+				<!---Perform search query by user email address-->>
+				<script>
+						function searchUsersbyEmail() {
+						return document.getElementById('usersearchquery').value;
+						}
+						document.getElementById('useremailsearchbtn').addEventListener('click', async function(event){
+						url = 'http://127.0.01:8090/users/'
+						queried = searchUsersbyEmail()
+						
+						let response = await fetch(url+queried);
+						let body = await response.text();
+						let userlist = [JSON.parse(body)];
+			
+						$("#search_resultsuseremail").html("");
+						for(let i = 0; i < userlist.length; i++){
+							search_resultsuseremail.innerHTML += `
+							<br>
+							<div class="card bg-light" style="" data-id="${userlist[i].username}">
+							<div class="card-body">
+								<h4 style="font-size: 22px; color: #16A2B8;">${userlist[i].fname} ${userlist[i].lname}</h4>
+								<h6 class="card-subtitle mb-2 text-muted"> ${userlist[i].username}</h6>
+								<p><strong>Profile Bio:</strong> ${userlist[i].bio}</p>
+							</div>
+							</div>`
+						console.log('Search query sent via fetch')
+						}
+						});				
+						</script>
+			<!---Perform search query by user first name-->>
+			<script>
+			function searchUsersbyFName() {
+			return document.getElementById('usersearchquery').value;
+			}
+			document.getElementById('userfnamesearchbtn').addEventListener('click', async function(event){
+			url = 'http://127.0.01:8090/users/fname/'
+			queried = searchUsersbyFName()
+			
+			let response = await fetch(url+queried);
+			let body = await response.text();
+			let userlist = [JSON.parse(body)];
 
+  		$("#search_resultsuserfname").html("");
+  		for(let i = 0; i < userlist.length; i++){
+				search_resultsuserfname.innerHTML += `
+							<br>
+							<div class="card bg-light" style="" data-id="${userlist[i].username}">
+							<div class="card-body">
+								<h4 style="font-size: 22px; color: #16A2B8;">${userlist[i].fname} ${userlist[i].lname}</h4>
+								<h6 class="card-subtitle mb-2 text-muted"> ${userlist[i].username}</h6>
+								<p><strong>Profile Bio:</strong> ${userlist[i].bio}</p>
+							</div>
+							</div>`
+  		console.log('Search query sent via fetch')
+  		}
+			});				
+			</script>
+			<!---Perform search query by user last name-->>
+			<script>
+					function searchUsersbyLName() {
+					return document.getElementById('usersearchquery').value;
+					}
+					document.getElementById('userlnamesearchbtn').addEventListener('click', async function(event){
+					url = 'http://127.0.01:8090/users/lname/'
+					queried = searchUsersbyLName()
+					
+					let response = await fetch(url+queried);
+					let body = await response.text();
+					let userlist = [JSON.parse(body)];
+		
+					$("#search_resultsuserlname").html("");
+					for(let i = 0; i < userlist.length; i++){
+						search_resultsuserlname.innerHTML += `
+						<br>
+							<div class="card bg-light" style="" data-id="${userlist[i].username}">
+							<div class="card-body">
+								<h4 style="font-size: 22px; color: #16A2B8;">${userlist[i].fname} ${userlist[i].lname}</h4>
+								<h6 class="card-subtitle mb-2 text-muted"> ${userlist[i].username}</h6>
+								<p><strong>Profile Bio:</strong> ${userlist[i].bio}</p>
+							</div>
+							</div>`
+					console.log('Search query sent via fetch')
+					}
+					});				
+					</script>
 			<!-- Footer -->
 			<div class="modal-footer">
 				<p style="font-size:16px; margin-top:12px;">Not yet registered with MyForum?</p>
@@ -236,6 +292,84 @@ const auth = firebase.auth();
 		</div>
 	</div>
 </div>
+
+<!-- Search Users by Email Modal-->
+<div class="modal fade" id="searchresults_useremail" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+	
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Search Results</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+	
+				<!-- Body -->
+				<div class="modal-body">
+						<p style="font-size:16px; margin-top:15px;">Searching for user queried by email address.
+						<div id="search_resultsuseremail"></div>	
+				</div>
+	
+				<!-- Footer -->
+				<div class="modal-footer">
+					<p style="font-size:16px; margin-top:12px;">Looking for a different user?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#userdirectory">Inititate New Search</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- Search Users by First Name Modal-->
+<div class="modal fade" id="searchresults_userfname" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+	
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Search Results</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+	
+				<!-- Body -->
+				<div class="modal-body">
+						<p style="font-size:16px; margin-top:15px;">Searching for user queried by first name.
+						<div id="search_resultsuserfname"></div>	
+				</div>
+	
+				<!-- Footer -->
+				<div class="modal-footer">
+					<p style="font-size:16px; margin-top:12px;">Looking for a different post?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#userdirectory">Inititate New Search</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- Search Users by Last Name Modal-->
+<div class="modal fade" id="searchresults_userlname" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+	
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Search Results</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+	
+				<!-- Body -->
+				<div class="modal-body">
+						<p style="font-size:16px; margin-top:15px;">Searching for users queried by last name.
+						<div id="search_resultsuserlname"></div>	
+				</div>
+	
+				<!-- Footer -->
+				<div class="modal-footer">
+					<p style="font-size:16px; margin-top:12px;">Looking for a different post?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#userdirectory">Inititate New Search</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
 <!-- Post Library Modal-->
 <div class="modal fade" id="postlibrary" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -250,8 +384,151 @@ const auth = firebase.auth();
 	
 				<!-- Body -->
 				<div class="modal-body">
-						<p style="font-size:16px; margin-top:15px;">View all MyForum posts.</p>
+						<p style="font-size:16px; margin-top:15px;">View all and search for MyForum posts. </p>
+						<label for="postsearchquery"><strong>Enter a search query:</strong></label>
+						<input type="text" id="postsearchquery"size="35"><br>
+						<button class="btn btn-info" id="postnamesearchbtn" style="margin-right: 5px; margin-top:7px;" onclick="searchPostsbyName()" data-dismiss="modal" data-toggle="modal" data-target="#searchresults_posttitle">Search by Post Name</button>
+						<button class="btn btn-info" id="postauthorsearchbtn" style="margin-top:7px;"onclick="searchPostsbyAuthor()"data-dismiss="modal" data-toggle="modal" data-target="#searchresults_postauthor">Search by Post Author (email address)</button>
 						<div id="postlistcontent"></div>	
+				</div>
+			
+			<!---Perform search query by post title-->>
+			<script>
+			function searchPostsbyName() {
+			return document.getElementById('postsearchquery').value;
+			}
+			document.getElementById('postnamesearchbtn').addEventListener('click', async function(event){
+			url = 'http://127.0.01:8090/posts/'
+			queried = searchPostsbyName()
+			
+			let response = await fetch(url+queried);
+			let body = await response.text();
+			let postlist = [JSON.parse(body)];
+
+  		$("#search_resultsposttitle").html("");
+  		for(let i = 0; i < postlist.length; i++){
+    	search_resultsposttitle.innerHTML += `
+        <br>
+        <div class="card bg-light" style="" data-id="${postlist[i].posttitle}">
+        <div class="card-body">
+          <h4 style="font-size: 22px; color: #16A2B8;">${postlist[i].posttitle}</h4>
+          <h6 class="card-subtitle mb-2 text-muted"> Written by: ${postlist[i].postauthor}</h6>
+          <h6 class="card-subtitle mb-2 text-muted"><strong> ${postlist[i].postdate}</strong></h6>
+          <p>${postlist[i].postcontent}</p>
+        </div>
+        </div>`
+  		console.log('Search query sent via fetch')
+  		}
+			});				
+			</script>
+
+		<!---Perform search query by post author (email address)-->
+		<script>
+				function searchPostsbyAuthor() {
+				return document.getElementById('postsearchquery').value;
+				}
+				document.getElementById('postauthorsearchbtn').addEventListener('click', async function(event){
+				url = 'http://127.0.01:8090/posts/author/'
+				queried = searchPostsbyAuthor()
+				
+				let response = await fetch(url+queried);
+				let body = await response.text();
+				let postlist = [JSON.parse(body)];
+	
+				$("#search_resultspostauthor").html("");
+				for(let i = 0; i < postlist.length; i++){
+					search_resultspostauthor.innerHTML += `
+					<br>
+					<div class="card bg-light" style="" data-id="${postlist[i].posttitle}">
+					<div class="card-body">
+						<h4 style="font-size: 22px; color: #16A2B8;">${postlist[i].posttitle}</h4>
+						<h6 class="card-subtitle mb-2 text-muted"> Written by: ${postlist[i].postauthor}</h6>
+						<h6 class="card-subtitle mb-2 text-muted"><strong> ${postlist[i].postdate}</strong></h6>
+						<p>${postlist[i].postcontent}</p>
+					</div>
+					</div>`
+				console.log('Search query sent via fetch')
+				}
+				});				
+				</script>
+	
+				<!-- Footer -->
+				<div class="modal-footer">
+					<p style="font-size:16px; margin-top:12px;">Want to create a new post?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#createpost">Create New Post</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- Search Posts by Title Modal-->
+<div class="modal fade" id="searchresults_posttitle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+	
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Search Results</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+	
+				<!-- Body -->
+				<div class="modal-body">
+						<p style="font-size:16px; margin-top:15px;">Searching for posts queried by post title.
+						<div id="search_resultsposttitle"></div>	
+				</div>
+	
+				<!-- Footer -->
+				<div class="modal-footer">
+					<p style="font-size:16px; margin-top:12px;">Looking for a different post?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#postlibrary">Inititate New Search</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<!-- Search Posts by Author Modal-->
+<div class="modal fade" id="searchresults_postauthor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+	
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Search Results</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+	
+				<!-- Body -->
+				<div class="modal-body">
+						<p style="font-size:16px; margin-top:15px;">Searching for posts queried by post author's email address.
+						<div id="search_resultspostauthor"></div>	
+				</div>
+	
+				<!-- Footer -->
+				<div class="modal-footer">
+					<p style="font-size:16px; margin-top:12px;">Looking for a different post?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#postlibrary">Inititate New Search</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!--My Posts Modal-->
+<div class="modal fade" id="myposts" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" style="width:900px;">
+			<div class="modal-content">
+	
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">My Posts</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+	
+				<!-- Body -->
+				<div class="modal-body">
+						<p style="font-size:16px; margin-top:15px;">View and manage your MyForum posts.</p>
+						<div id="mypostslistcontent"></div>	
 				</div>
 	
 				<!-- Footer -->
@@ -281,7 +558,7 @@ const auth = firebase.auth();
 						<button id="postfeed" class="btn btn-info lg"  style="margin-left:-20px;">Refresh Post Feed</button>
 					</div>
 			<div class="createnewpost">
-				<button id="createnewpostmodal" class="btn btn-info lg" data-toggle="modal" data-target="#createpost" style="margin-left:20px;">Create New Post</button>
+				<button id="createnewpostmodal" class="btn btn-info lg d-none" data-toggle="modal" data-target="#createpost" style="margin-left:20px;">Create New Post</button>
 			</div>
 				</div>
 			<div class="overflow">
