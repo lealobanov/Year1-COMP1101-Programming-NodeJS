@@ -24,3 +24,22 @@ On submit, both the login and user registration forms assign a temporary 'curren
 
 -- snippet of post request register
 -- snippet of post request login
+
+
+-- create new blog post request
+
+-- get users in directory and search
+  -- how search is managed - JS function to acquire value in form field on button click submit
+-- get posts in library and search 
+
+-- get posts in current feed
+
+-- formatting html dynamically in get request through fetch (iterating through loops and creating/populating new html divs) 
+  -- modal structure
+  -- bootstrap styling
+    -- handles mobile support 
+  
+-- cloud deployment via heroku
+
+** when testing done: what test cases were addressed (eg what form inputs were not allowed + why)
+
