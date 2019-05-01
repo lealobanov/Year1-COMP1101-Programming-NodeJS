@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en">
+  
+<head>
+<meta charset = "utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+
+<script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-auth.js"></script>
+
+<script>
+//Initialize Firebase authentication
+const config = {
+	apiKey: "AIzaSyDHnMD4FJcvRcy2NsVKRJ-FGHT_geeC2O8",
+	authDomain: "prog-web-app-beacc.firebaseapp.com",
+	databaseURL: "https://prog-web-app-beacc.firebaseio.com",
+	projectId: "prog-web-app-beacc",
+	storageBucket: "prog-web-app-beacc.appspot.com",
+	messagingSenderId: "40206756427"
+};
+firebase.initializeApp(config);
+const auth = firebase.auth();
+</script>
+
+<title>WebForum</title>
+</head>
+
+<body>
+
+<!---Collapsible Navigation Bar-->
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<a class="navbar-brand" href="#" style="color:#008080;"><strong>WebForum</strong></a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+			
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav mr-auto">
+								<li class="nav-item">
+									<a href="#userdirectory" class="btn btn-info" data-toggle="modal" data-target="#userdirectory" role="button" id ="listusers" style=" margin-right:7px; margin-top:5px;">User Directory</a> 
+								</li>
+								<li class="nav-item">
+										<a href="#postlibrary" class="btn btn-info" data-toggle="modal" data-target="#postlibrary" role="button" id ="listposts" style=" margin-right:7px;margin-top:5px;">Post Library</a> 
+									</li>
+								<li class="nav-item">
+											<a href="#myposts" class="btn btn-info d-none" data-toggle="modal" data-target="#myposts" role="button" id ="mypostsbtn" style=" margin-right:7px;margin-top:5px;">My Posts</a> 
+									</li>
+								<li class="nav-item">
+									<a href="#login" data-toggle="modal" data-target="#login" class="btn btn-info" role="button" id="loginnavbutton" style=" margin-right:7px;margin-top:5px;">Login</a>
+								</li>
+								<li class="nav-item">
+									<a href="#register" data-toggle="modal" data-target="#register" class="btn btn-info" role="button" id = "regnavbutton" style=" margin-right:7px;margin-top:5px;">Register</a> 
+								</li>
+								<li class="nav-item">
+									<a href="" class="btn btn-info d-none" role="button" id ="btnLogout" style=" margin-right:7px;margin-top:5px;">Logout</a> 
+								</li>
+					</ul>
+				</div>
+			</nav>
+
+
+<!-- Login Modal-->
+<div class="modal fade" id="login" tabindex="-1" role="dialog"  aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Login</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Body -->
+				<div class="modal-body">
+            <p style="font-size:16px; margin-top:15px;">If you are an existing user, please login below.</p>
+					<form id="form_login" action="http://127.0.0.1:8090">
+						<div class="form-group">
+							<input type="email" class="form-control" placeholder="Email" id="username_login" required>
+						</div>
+						<div class="form-group">
+							<input type="password" class="form-control" placeholder="Password" id="password_login" required> 	
+						</div>
+						<!--alert if failed login-->
+						<button id="btnLogin" type="submit" class="btn btn-info" data-dismiss="modal">Log In</button>
+					</form>
+				</div>
+
+				<!-- Footer -->
+				<div class="modal-footer">
+          <p style="font-size:16px; margin-top:12px;">Not yet registered with WebForum?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#register">Create an Account</button>
+				</div>
+			</div>
+		</div>
+	</div>
+  
+<!-- User Registration Modal-->
+<div class="modal fade" id="register" tabindex="-1" role="dialog"  aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">User Registration</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Body -->
+				<div class="modal-body">
+						<p style="font-size:16px; margin-top:15px;">Not yet registered? To access our services, create an account with WebForum.</p>
+					<form id="form_register" action="http://127.0.0.1:8090">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="First Name" id="first_reg" required>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Last Name" id="last_reg" required>
+            </div>
+            <div class="form-group">
+                <input type="email" class="form-control" placeholder="Email" id="username_reg" required>
+							</div>
+							<div class="form-group">
+									<textarea class="form-control" rows="3" placeholder="Profile Bio" id="bio_reg" required></textarea>
+								</div>
+            <div class="form-group">
+              <input type="password" class="form-control" placeholder="Password" id="password_reg" required>  
+            </div>
+            <div class="form-group">
+              <input type="password" class="form-control" placeholder="Confirm Password" id="confirmpass_reg" required>      
+            </div>
+						<!--alert if registration failed-->
+						<button id="btnRegister" type="submit" class="btn btn-info" data-dismiss="modal" >Register</button>
+					</form>
+				</div>
+
+				<!-- Footer -->
+				<div class="modal-footer">
+          <p style="font-size:16px; margin-top:12px;">Already have a WebForum account?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#login">Login</button>
+				</div>
+			</div>
+		</div>
+  </div>
+
+<!-- Create Post Modal-->
+<div class="modal fade" id="createpost" tabindex="-1" role="dialog"  aria-hidden="true">
+		<div class="modal-dialog modal-lg" style="width:900px;">
+			<div class="modal-content">
+
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Create a New Post</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<!-- Body -->
+				<div class="modal-body">
+            <p style="font-size:16px; margin-top:15px;">Create a new post on WebForum.</p>
+					<form id="form_create_post" action="http://127.0.0.1:8090">
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="Post Title" id="post_title" required>
+						</div>
+						<div class="form-group">
+								<input type="date" class="form-control" placeholder="Date (yyyy-mm-dd)" id="date" required>	
+							</div>
+						<div class="form-group">
+								<textarea class="form-control" rows="5" placeholder="Enter post content..." id="post_content" required></textarea>
+							</div>
+					
+						<!--alert if failed login-->
+						<button type="submit" id="submit" class="btn btn-info">Create Post</button>
+					</form>
+				</div>
+
+				<!-- Footer -->
+				<div class="modal-footer">
+				</div>
+			</div>
+		</div>
+  </div>
+
+<!-- User Directory Modal-->
+<div class="modal fade" id="userdirectory" tabindex="-1" role="dialog"  aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+
+			<!-- Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">User Directory</h4>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+
+			<!-- Body -->
+			<div class="modal-body">
+					<p style="font-size:16px; margin-top:15px;">Discover current WebForum users.</p>
+					<label for="usersearchquery" ><strong>Enter a search query:</strong></label>
+						<input type="text" style="border: 1px solid #008080; border-radius: 4px" id="usersearchquery" size="35"><br>
+						<button class="btn btn-info" id="useremailsearchbtn" style="margin-right: 5px; margin-top:7px;" onclick="searchUsersbyEmail()" data-dismiss="modal" data-toggle="modal" data-target="#searchresults_useremail">Search by Email Address</button>
+						<button class="btn btn-info" id="userfnamesearchbtn" style="margin-top:7px;" onclick="searchUsersbyFName()" data-dismiss="modal" data-toggle="modal" data-target="#searchresults_userfname">Search by First Name</button>
+						<button class="btn btn-info" id="userlnamesearchbtn" style="margin-top:7px;" onclick="searchUsersbyLName()" data-dismiss="modal" data-toggle="modal" data-target="#searchresults_userlname">Search by Last Name</button>
+					<div id="usercontent"></div>	
+					
+			</div>
+				<!---Perform search query by user email address-->
+				<script>
+						function searchUsersbyEmail() {
+						return document.getElementById('usersearchquery').value;
+						}
+						document.getElementById('useremailsearchbtn').addEventListener('click', async function(event){
+						url = 'http://127.0.01:8090/users/'
+						queried = searchUsersbyEmail()
+						
+						let response = await fetch(url+queried);
+						let body = await response.text();
+						let userlist = [JSON.parse(body)];
+						if (userlist[0].nonefound == "No user found with this email address.") {
+					$("#search_resultsuseremail").html("");
+					search_resultsuseremail.innerHTML += `
+					<br>
+					<p>No users found with this email address.</p>`
+				}
+				else{
+			
+						$("#search_resultsuseremail").html("");
+						for(let i = 0; i < userlist.length; i++){
+							search_resultsuseremail.innerHTML += `
+							<br>
+							<div class="card bg-light" style="" data-id="${userlist[i].username}">
+							<div class="card-body">
+								<h4 style="font-size: 22px; color: #16A2B8;">${userlist[i].fname} ${userlist[i].lname}</h4>
+								<h6 class="card-subtitle mb-2 text-muted"> ${userlist[i].username}</h6>
+								<p><strong>Profile Bio:</strong> ${userlist[i].bio}</p>
+							</div>
+							</div>`
+						console.log('Search query sent via fetch')
+						}}
+						});				
+						</script>
+			<!---Perform search query by user first name-->
+			<script>
+			function searchUsersbyFName() {
+			return document.getElementById('usersearchquery').value;
+			}
+			document.getElementById('userfnamesearchbtn').addEventListener('click', async function(event){
+			url = 'http://127.0.01:8090/users/fname/'
+			queried = searchUsersbyFName()
+			
+			let response = await fetch(url+queried);
+			let body = await response.text();
+			let userlist = [JSON.parse(body)];
+			if (userlist[0].nonefound == "No user found with this first name.") {
+					$("#search_resultsuserfname").html("");
+					search_resultsuserfname.innerHTML += `
+					<br>
+					<p>No users found with this first name.</p>`
+				}
+				else{
+  		$("#search_resultsuserfname").html("");
+  		for(let i = 0; i < userlist.length; i++){
+				search_resultsuserfname.innerHTML += `
+							<br>
+							<div class="card bg-light" style="" data-id="${userlist[i].username}">
+							<div class="card-body">
+								<h4 style="font-size: 22px; color: #16A2B8;">${userlist[i].fname} ${userlist[i].lname}</h4>
+								<h6 class="card-subtitle mb-2 text-muted"> ${userlist[i].username}</h6>
+								<p><strong>Profile Bio:</strong> ${userlist[i].bio}</p>
+							</div>
+							</div>`
+  		console.log('Search query sent via fetch')
+  		}}
+			});				
+			</script>
+			<!---Perform search query by user last name-->
+			<script>
+					function searchUsersbyLName() {
+					return document.getElementById('usersearchquery').value;
+					}
+					document.getElementById('userlnamesearchbtn').addEventListener('click', async function(event){
+					url = 'http://127.0.01:8090/users/lname/'
+					queried = searchUsersbyLName()
+					
+					let response = await fetch(url+queried);
+					let body = await response.text();
+					let userlist = [JSON.parse(body)];
+					if (userlist[0].nonefound == "No user found with this last name.") {
+					$("#search_resultsuserlname").html("");
+					search_resultsuserlname.innerHTML += `
+					<br>
+					<p>No users found with this last name.</p>`
+				}
+				else{
+					$("#search_resultsuserlname").html("");
+					for(let i = 0; i < userlist.length; i++){
+						search_resultsuserlname.innerHTML += `
+						<br>
+							<div class="card bg-light" style="" data-id="${userlist[i].username}">
+							<div class="card-body">
+								<h4 style="font-size: 22px; color: #16A2B8;">${userlist[i].fname} ${userlist[i].lname}</h4>
+								<h6 class="card-subtitle mb-2 text-muted"> ${userlist[i].username}</h6>
+								<p><strong>Profile Bio:</strong> ${userlist[i].bio}</p>
+							</div>
+							</div>`
+					console.log('Search query sent via fetch')
+					}}
+					});				
+					</script>
+			<!-- Footer -->
+			<div class="modal-footer">
+				<p style="font-size:16px; margin-top:12px;">Not yet registered with WebForum?</p>
+				<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#register">Create an Account</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Search Users by Email Modal-->
+<div class="modal fade" id="searchresults_useremail" tabindex="-1" role="dialog"  aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+	
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Search Results</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+	
+				<!-- Body -->
+				<div class="modal-body">
+						<p style="font-size:16px; margin-top:15px;">Searching for user queried by email address.
+						<div id="search_resultsuseremail"></div>	
+				</div>
+	
+				<!-- Footer -->
+				<div class="modal-footer">
+					<p style="font-size:16px; margin-top:12px;">Looking for a different user?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#userdirectory">Inititate New Search</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- Search Users by First Name Modal-->
+<div class="modal fade" id="searchresults_userfname" tabindex="-1" role="dialog"  aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+	
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Search Results</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+	
+				<!-- Body -->
+				<div class="modal-body">
+						<p style="font-size:16px; margin-top:15px;">Searching for user queried by first name.
+						<div id="search_resultsuserfname"></div>	
+				</div>
+	
+				<!-- Footer -->
+				<div class="modal-footer">
+					<p style="font-size:16px; margin-top:12px;">Looking for a different post?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#userdirectory">Inititate New Search</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- Search Users by Last Name Modal-->
+<div class="modal fade" id="searchresults_userlname" tabindex="-1" role="dialog"  aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+	
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Search Results</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+	
+				<!-- Body -->
+				<div class="modal-body">
+						<p style="font-size:16px; margin-top:15px;">Searching for users queried by last name.
+						<div id="search_resultsuserlname"></div>	
+				</div>
+	
+				<!-- Footer -->
+				<div class="modal-footer">
+					<p style="font-size:16px; margin-top:12px;">Looking for a different post?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#userdirectory">Inititate New Search</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- Post Library Modal-->
+<div class="modal fade" id="postlibrary" tabindex="-1" role="dialog"  aria-hidden="true">
+		<div class="modal-dialog modal-lg" style="width:900px;">
+			<div class="modal-content">
+	
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Post Library</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+	
+				<!-- Body -->
+				<div class="modal-body">
+						<p style="font-size:16px; margin-top:15px;">View all and search for WebForum posts. </p>
+						<label for="postsearchquery"><strong>Enter a search query:</strong></label>
+						<input type="text" id="postsearchquery" size="35"><br>
+						<button class="btn btn-info" id="postnamesearchbtn" style="margin-right: 5px; margin-top:7px;" onclick="searchPostsbyName()" data-dismiss="modal" data-toggle="modal" data-target="#searchresults_posttitle">Search by Post Name</button>
+						<button class="btn btn-info" id="postauthorsearchbtn" style="margin-top:7px;" onclick="searchPostsbyAuthor()" data-dismiss="modal" data-toggle="modal" data-target="#searchresults_postauthor">Search by Post Author (email address)</button>
+						<div id="postlistcontent"></div>	
+				</div>
+			
+			<!---Perform search query by post title-->
+			<script>
+			function searchPostsbyName() {
+			return document.getElementById('postsearchquery').value;
+			}
+			document.getElementById('postnamesearchbtn').addEventListener('click', async function(event){
+			url = 'http://127.0.01:8090/posts/'
+			queried = searchPostsbyName()
+			
+			let response = await fetch(url+queried);
+			let body = await response.text();
+			let postlist = [JSON.parse(body)];
+			
+			if (postlist[0].nonefound == "No post found with this title.") {
+					$("#search_resultsposttitle").html("");
+					search_resultsposttitle.innerHTML += `
+					<br>
+					<p>No posts found with this title.</p>`
+				}
+			else{
+  		$("#search_resultsposttitle").html("");
+  		for(let i = 0; i < postlist.length; i++){
+    	search_resultsposttitle.innerHTML += `
+        <br>
+        <div class="card bg-light" style="" data-id="${postlist[i].posttitle}">
+        <div class="card-body">
+          <h4 style="font-size: 22px; color: #16A2B8;">${postlist[i].posttitle}</h4>
+          <h6 class="card-subtitle mb-2 text-muted"> Written by: ${postlist[i].postauthor}</h6>
+          <h6 class="card-subtitle mb-2 text-muted"><strong> ${postlist[i].postdate}</strong></h6>
+          <p>${postlist[i].postcontent}</p>
+        </div>
+        </div>`
+  		console.log('Search query sent via fetch')
+  		}}
+			});				
+			</script>
+
+		<!---Perform search query by post author (email address)-->
+		<script>
+				function searchPostsbyAuthor() {
+				return document.getElementById('postsearchquery').value;
+				}
+				document.getElementById('postauthorsearchbtn').addEventListener('click', async function(event){
+				url = 'http://127.0.01:8090/posts/author/'
+				queried = searchPostsbyAuthor()
+		
+				
+				let response = await fetch(url+queried);
+				console.log(response)
+				let body = await response.text();
+				console.log(body)
+				let postlist = [JSON.parse(body)];
+				console.log(postlist, postlist)
+				if (postlist[0].nonefound == "No post found with this author.") {
+					$("#search_resultspostauthor").html("");
+					search_resultspostauthor.innerHTML += `
+					<br>
+					<p>No posts found with this author.</p>`
+				}
+	
+				else{$("#search_resultspostauthor").html("");
+				for(let i = 0; i < postlist.length; i++){
+				search_resultspostauthor.innerHTML += `
+					<br>
+					<div class="card bg-light" style="" data-id="${postlist[i].posttitle}">
+					<div class="card-body">
+						<h4 style="font-size: 22px; color: #16A2B8;">${postlist[i].posttitle}</h4>
+						<h6 class="card-subtitle mb-2 text-muted"> Written by: ${postlist[i].postauthor}</h6>
+						<h6 class="card-subtitle mb-2 text-muted"><strong> ${postlist[i].postdate}</strong></h6>
+						<p>${postlist[i].postcontent}</p>
+					</div>
+					</div>`
+				console.log('Search query sent via fetch')
+				}}
+				});				
+				</script>		
+	
+				<!-- Footer -->
+				<div class="modal-footer">
+					<p style="font-size:16px; margin-top:12px;">Want to create a new post?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#createpost">Create New Post</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- Search Posts by Title Modal-->
+<div class="modal fade" id="searchresults_posttitle" tabindex="-1" role="dialog"  aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+	
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Search Results</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+	
+				<!-- Body -->
+				<div class="modal-body">
+						<p style="font-size:16px; margin-top:15px;">Searching for posts queried by post title.
+						<div id="search_resultsposttitle"></div>	
+				</div>
+	
+				<!-- Footer -->
+				<div class="modal-footer">
+					<p style="font-size:16px; margin-top:12px;">Looking for a different post?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#postlibrary">Inititate New Search</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<!-- Search Posts by Author Modal-->
+<div class="modal fade" id="searchresults_postauthor" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+	
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">Search Results</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+	
+				<!-- Body -->
+				<div class="modal-body">
+						<p style="font-size:16px; margin-top:15px;">Searching for posts queried by post author's email address.
+						<div id="search_resultspostauthor"></div>	
+				</div>
+	
+				<!-- Footer -->
+				<div class="modal-footer">
+					<p style="font-size:16px; margin-top:12px;">Looking for a different post?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#postlibrary">Inititate New Search</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!--My Posts Modal-->
+<div class="modal fade" id="myposts" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog modal-lg" style="width:900px;">
+			<div class="modal-content">
+	
+				<!-- Header -->
+				<div class="modal-header">
+					<h4 class="modal-title">My Posts</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+	
+				<!-- Body -->
+				<div class="modal-body">
+						<p style="font-size:16px; margin-top:15px;">View and manage your WebForum posts.</p>
+						<div id="mypostslistcontent"></div>	
+				</div>
+	
+				<!-- Footer -->
+				<div class="modal-footer">
+					<p style="font-size:16px; margin-top:12px;">Want to create a new post?</p>
+					<button type ="button" class="btn btn-info" data-dismiss="modal" data-toggle="modal" data-target="#createpost">Create New Post</button>
+				</div>
+			</div>
+		</div>
+	</div>
+  
+<section id="frontend">
+
+<div class= "jumbotron text-center">
+<h1>Welcome to WebForum!</h1>
+<br>
+<p>WebForum is an internet forum service; upon registering and logging in, users can publish forum posts to the service. Additionally, web visitors who are not logged in can search for current users and posts in the user directory and post library, respectively.</p> 
+</div>
+</section>
+
+<section id="posts" class="container" style="margin-top: 40px;">
+		<h2>Post Feed</h2>
+		<p>View the latest posts on WebForum by refreshing the post feed.</p>
+		<div class="col-sm-12 float-left ">
+				<div class="btn-group">
+				<div class="refreshpostfeed">
+						<button id="postfeed" class="btn btn-info lg"  style="margin-left:-20px;">Refresh Post Feed</button>
+					</div>
+			<div class="createnewpost">
+				<button id="createnewpostmodal" class="btn btn-info lg d-none" data-toggle="modal" data-target="#createpost" style="margin-left:20px;">Create New Post</button>
+			</div>
+				</div>
+			<div class="overflow">
+					<div id="listallpostcontent">
+						</div>
+			</div>
+		</div>
+		
+</section>
+
+
+<script src="index.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>
