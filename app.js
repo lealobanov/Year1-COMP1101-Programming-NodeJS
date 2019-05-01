@@ -45,6 +45,8 @@ app.post('/newuser', function(req,res){
     
 	}else{
 		
+		current_user.push(req.body.username);
+
 		let user = {
 			fname: req.body.fname,
       lname: req.body.lname,	
@@ -53,6 +55,7 @@ app.post('/newuser', function(req,res){
 		};
 
 		users.push(user);
+		
 	
 		res.send(true);
 		console.log('Added new user');
@@ -67,38 +70,24 @@ app.post('/login', function(req,res){
 	
   if(checkUserExists(req.body.username) !== false){
 		console.log('This user has already been stored in the list of current users.')
-		current_user[0] = req.body.username
+		current_user.push(req.body.username)
+		console.log('CURRENT USER', current_user[0]); 
+	} else if (!req.body.username || !req.body.password ){
+		res.send(400);
+		res.send("Form fields missing. Please complete all fields.");
 	}
-	else{
-		current_user[0] = req.body.username
+	else {
+		current_user.push(req.body.username)
+		console.log('CURRENT USER', current_user[0]); 
 		let user = {
 			fname: 'Null',
       lname: 'Null',	
 			username: req.body.username,
-			bio: 'This user was registered and authenticated by Firebase during a previous server session. To update your profile information, please login as a recurring user.'
+			bio: 'This user was registered and authenticated by Firebase during a previous server session.'
 		};
 		users.push(user);
-		console.log('This user was registered and authenticated by Firebase in a previous session.')
-	}
-});
 
-//Post user profile data if logging in from previous server session
-app.post('/loginupd', function(req,res){
-	
-  if(checkUserExists(req.body.username) !== false){
-		console.log('This user has already been stored in the list of current users.')
-		current_user[0] = req.body.username
-	}
-	else{
-		current_user[0] = req.body.username
-		let user = {
-			fname: req.body.fname,
-      lname: req.body.lname,	
-			username: req.body.username,
-			bio: req.body.bio
-		};
-		users.push(user);
-		console.log('Your profile data has been updated.')
+		console.log('This user was registered and authenticated by Firebase in a previous session.')
 	}
 });
 
@@ -143,7 +132,12 @@ app.post("/createpost",function(req,resp){
 	
 	if(!req.body.posttitle || !req.body.postdate || !req.body.postcontent ){
 		
-		resp.send(false);
+		resp.send(400);
+		resp.send("Form fields missing. Please try again.");
+	}else if (checkPostExists(req.body.posttitle) !== false){
+			resp.status(400)
+			resp.send("A post with this title already exists in the system. Please try again.");
+	
 	}else{
 		let post= {
 			posttitle: req.body.posttitle,
@@ -154,7 +148,7 @@ app.post("/createpost",function(req,resp){
 		
 		posts.push(post);
 		my_posts.push(post);
-		resp.send(true);
+		
 	}
 })
 
@@ -168,7 +162,7 @@ app.get("/myposts/", function(req,res) {
 	res.send(my_posts)
 });
 
-// Functions for searchign among post properties
+// Functions for searching among post properties
 
 function checkPostExists(posttitle){
 	for (var i = 0; i < posts.length; i++) {
@@ -196,7 +190,7 @@ app.get("/users/:username", function(req,res){
 	if(index !== false){
 		res.send(users[index]);
 	}else{
-		res.send("No user found with this email address.");
+		res.send({"nonefound":"No user found with this email address."});
 	}
 
 })
@@ -208,7 +202,7 @@ app.get("/users/fname/:fname", function(req,res){
 	if(index !== false){
 		res.send(users[index]);
 	}else{
-		res.send("No user found with this first name.");
+		res.send({"nonefound":"No user found with this first name."});
 	}
 
 })
@@ -220,7 +214,7 @@ app.get("/users/lname/:lname", function(req,res){
 	if(index !== false){
 		res.send(users[index]);
 	}else{
-		res.send("No user found with this last name.");
+		res.send({"nonefound":"No user found with this last name."});
 	}
 
 })
@@ -232,7 +226,7 @@ app.get("/posts/:posttitle", function(req,res){
 	if(index !== false){
 		res.send(posts[index]);
 	}else{
-		res.send("No post found with this title.");
+		res.send({"nonefound":"No post found with this title."});
 	}
 
 })
@@ -244,14 +238,9 @@ app.get("/posts/author/:postauthor", function(req,res){
 	if(index !== false){
 		res.send(posts[index]);
 	}else{
-		res.send("No post found with this author.");
+		res.send({"nonefound":"No post found with this author."});
 	}
 
 })
-
-//Run server
-app.listen(port,function(){
-  console.log(`Server listening on port ${port}`);
-});
 
 module.exports = app;

@@ -27,9 +27,8 @@ btnRegister.addEventListener('click', e => {
 
 // Authenticate user login
 btnLogin.addEventListener('click', e => {
-  const email = txtEmailRecur.value;
-  console.log(email)
-  const pass = txtPasswordRecur.value;
+  const email = txtEmail.value;
+  const pass = txtPassword.value;
   const promise = auth.signInWithEmailAndPassword(email,pass);
   promise.catch(e => console.log(e.message));
 
@@ -63,6 +62,7 @@ auth.onAuthStateChanged(firebaseUser => {
 document.getElementById('form_register').addEventListener('submit', async function(event){
     event.preventDefault();
     
+    
     try{
         let data = {
 
@@ -84,10 +84,10 @@ document.getElementById('form_register').addEventListener('submit', async functi
                                    
                                   });
       if(!response.ok){
-        throw new Error("Encountered error" + response.code);
+        throw new error("Encountered error when registering new user. Ensure that all fields are submitted and passwords match.");
       }
     } catch (error) {
-      alert ("Problem: " + error);
+      alert(error);
     }
     console.log('Fetch happened')
     
@@ -111,14 +111,16 @@ document.getElementById('form_login').addEventListener('submit', async function(
 																 },
 																 body: JSON.stringify(data),
 																 
-																});
+                                });
+    console.log('response', response)                     
 		if(!response.ok){
-			throw new Error("Encountered error" + response.code);
-		}
+			throw new Error("Encountered error when logging in. Please ensure that all fields are completed.");
+    }
+    
 	} catch (error) {
 		alert ("Problem: " + error);
 	}
-	console.log('Fetch happened')
+  console.log('Fetch happened')
 });
 
 //Post new forum post to post library (authentication required to execute post)
@@ -143,7 +145,8 @@ document.getElementById('form_create_post').addEventListener('submit', async fun
                                  
                                 });
     if(!response.ok){
-      throw new Error("Encountered error" + response.code);
+      console.log(response.code)
+      throw new Error("Encountered error creating new post. A post with this title already exists in the post library.");
     }
   } catch (error) {
     alert ("Problem: " + error);
