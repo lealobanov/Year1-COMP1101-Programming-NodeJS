@@ -21,13 +21,12 @@ Simultaneously, the Firebase API user authentication service collects data that 
 User registration is handled by a POST request denoted /create post, which is executed upon completing the create post field.
 User email address and password are collected by the Firebase API, whereas user first/last name and bio are used to complete the user's WebForum profile.
 
-'
-//Collect user data upon registration (user authentication handled by Google Firebase Auth API)
-app.post('/newuser', function(req,res){
+	//Collect user data upon registration (user authentication handled by Google Firebase Auth API)
+	app.post('/newuser', function(req,res){
 	
-  if(checkUserExists(req.body.username) !== false){
+  	if(checkUserExists(req.body.username) !== false){
 		res.send(400);
-    res.send("A user with this username already exists. Please try again.");
+  	  res.send("A user with this username already exists. Please try again.");
     
 	}else if(!req.body.username || !req.body.fname || !req.body.lname || !req.body.password || !req.body.confirmpass){
     res.send("Form fields missing. Please complete all fields.");
@@ -56,44 +55,178 @@ app.post('/newuser', function(req,res){
 	}
 	console.log("Request to add new user data sent: " +req.body);
 });
-'''
+
+Alternatively, if the the user is recurring and attempting to access the WebForum service via the login form, a post request is issued to /login:
+
+document.getElementById('form_login').addEventListener('submit', async function(event){
+	event.preventDefault();
+	
+	try{
+			let data = {
+				 "username" : document.getElementById('username_login').value,
+					}
+	
+		let response = await fetch('http://127.0.01:8090/login',
+															 {
+																 method: "POST",
+																 headers: {
+																	 "Content-Type": "application/json"
+																 },
+																 body: JSON.stringify(data),
+																 
+                                });
+    console.log('response', response)                     
+		if(!response.ok){
+			throw new Error("Encountered error when logging in. Please ensure that all fields are completed.");
+    }
+    
+	} catch (error) {
+		alert ("Problem: " + error);
+	}
+ 	 console.log('Fetch happened')
+	});
+
 
 Firebase API is configured within a <script> tag in index.html and implemented in index.js.
 
 Initially, the API is called in index.html:
-'''
-
-<script>
-//Initialize Firebase authentication
-const config = {
-	apiKey: "AIzaSyDHnMD4FJcvRcy2NsVKRJ-FGHT_geeC2O8",
-	authDomain: "prog-web-app-beacc.firebaseapp.com",
-	databaseURL: "https://prog-web-app-beacc.firebaseio.com",
-	projectId: "prog-web-app-beacc",
-	storageBucket: "prog-web-app-beacc.appspot.com",
-	messagingSenderId: "40206756427"
-};
-firebase.initializeApp(config);
-const auth = firebase.auth();
-</script>
-
-'
-
-In index. js,
 
 
-On submit, both the login and user registration forms assign a temporary 'current user' value. This value is used to list appropriate data under 'My Posts' and properly accredit the post author when a new post is created in the system.
+	<script>
+	//Initialize Firebase authentication
+	const config = {
+		apiKey: "AIzaSyDHnMD4FJcvRcy2NsVKRJ-FGHT_geeC2O8",
+		authDomain: "prog-web-app-beacc.firebaseapp.com",
+		databaseURL: "https://prog-web-app-beacc.firebaseio.com",
+		projectId: "prog-web-app-beacc",
+		storageBucket: "prog-web-app-beacc.appspot.com",
+		messagingSenderId: "40206756427"
+	};
+	firebase.initializeApp(config);
+	const auth = firebase.auth();
+	</script>
+
+In index. js, the API initialized through a real time listener for authentication state change (logged in/logged out). Upon logging into the server, post methods are enabled such that a logged in user has the capability to initialize a new forum post.
 
 
--- snippet of post request register
--- snippet of post request login
+	auth.onAuthStateChanged(firebaseUser => {
+  	if(firebaseUser){
+  	 console.log(firebaseUser);
+   	 btnLogout.classList.remove('d-none');
+   	 btnMyPosts.classList.remove('d-none');
+	btnLoginheader.classList.add('d-none');
+    	btnRegisterheader.classList.add('d-none');
+    //Prevent users who are not logged in from initating new post entry
+    btnCreatePost.classList.remove('d-none');
+  	} else {
+   	 console.log('Not logged in.');
+   	 btnLogout.classList.add('d-none');
+ 	 }
+	});
 
 
--- create new blog post request
+On submit of the /newuser or /login posts request, both the login and user registration forms assign a temporary 'current user' value. This value is used to list appropriate data under 'My Posts' and properly accredit the post author when a new post is created in the system.
 
--- get users in directory and search
-  -- how search is managed - JS function to acquire value in form field on button click submit
--- get posts in library and search 
+Upon registering to the WebForum system, the user can proceed to create a new blog post to be posted on the service. A new post is issued via a /createpost POST request:
+ 
+ /Post new forum post to post library (authentication required to execute post)
+
+	document.getElementById('form_create_post').addEventListener('submit', async function(event){
+  	event.preventDefault();
+  
+ 	 try{
+      	let data = {
+         "posttitle" : document.getElementById('post_title').value,
+         "postdate": document.getElementById('date').value,
+         "postcontent": document.getElementById('post_content').value
+          }
+  
+    	let response = await fetch('http://127.0.01:8090/createpost',
+                               {
+                                 method: "POST",
+                                 headers: {
+                                   "Content-Type": "application/json"
+                                 },
+                                 body: JSON.stringify(data),
+                                 
+                                });
+    	if(!response.ok){
+      	console.log(response.code)
+      	throw new Error("Encountered error creating new post. A post with this title already exists in the post library.");
+    	}
+  	} catch (error) {
+  	  alert ("Problem: " + error);
+  	}
+  	console.log('Fetch happened')	
+	});
+
+
+Further, all users of the site (regardless of login status) can perform GET requests which generate lists of all users and posts currently hosted by the WebForum site. 
+
+
+To generate the current user directory, a GET request to /users is issued in the 'User Directory' modal:
+
+	app.get("/users/", function(req,res) {
+	res.send(users)
+	});
+
+
+Similarly, to generate the current post library,  a GET request to /users is issued in the 'Post Library' modal:
+
+	app.get("/posts/", function(req,res) {
+	res.send(posts)
+	});
+	
+The current logged-in user can also generate a library of their personal posts in the 'My Library'  
+
+Additionally, users can search for individual users or posts depending on user email address, first name, or last name, as well as post title and post author.
+
+A JavaScript function inititalized in index.html is used to dynamically pull text content from a search query field upon button click. When this information is collected, a GET request is initialized to retrieve user- or post- specific data. Each GET request for /users and /posts is subseqeuntly renderend in a dyanmic HTML modal:
+
+For example, searching for users by username (email address):
+
+	app.get("/users/:username", function(req,res){
+		let index = checkUserExists(req.params.username);
+	if(index !== false){
+		res.send(users[index]);
+	}else{
+		res.send({"nonefound":"No user found with this email address."});
+	}
+
+	})
+
+Searching for users by first name:
+
+	app.get("/users/fname/:fname", function(req,res){
+	let index = checkFnameUserExists(req.params.fname);
+	if(index !== false){
+		res.send(users[index]);
+	}else{
+		res.send({"nonefound":"No user found with this first name."});
+	}
+
+	})
+
+Searching for users by last name:
+
+	app.get("/users/lname/:lname", function(req,res){
+	let index = checkLnameUserExists(req.params.lname);
+	if(index !== false){
+		res.send(users[index]);
+	}else{
+		res.send({"nonefound":"No user found with this last name."});
+	}
+
+	})
+	
+Similarly, with regards to posts, users can search for posts by title:
+
+
+As well as search for post by author (email address):
+
+
+Lastly, all users, regardless of login status, are able to refresh the current post feed
+
 
 -- get posts in current feed
 
