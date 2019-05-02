@@ -58,8 +58,8 @@ User email address and password are collected by the Firebase API, whereas user 
 
 Alternatively, if the the user is recurring and attempting to access the WebForum service via the login form, a post request is issued to /login:
 
-document.getElementById('form_login').addEventListener('submit', async function(event){
-	event.preventDefault();
+	document.getElementById('form_login').addEventListener('submit', async function(event){
+		event.preventDefault();
 	
 	try{
 			let data = {
