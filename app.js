@@ -56,13 +56,8 @@ app.post('/newuser', function(req,res){
 
         users.push(user);
 		
-	
-        res.send(true);
-        console.log('Added new user');
-		
-		
+        res.send(true);	
     }
-    console.log('Request to add new user data sent: ' +req.body);
 });
 
 //Post user profile data upon login
