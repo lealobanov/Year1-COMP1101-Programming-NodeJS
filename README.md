@@ -89,7 +89,7 @@ Alternatively, if the the user is recurring and attempting to access the WebForu
 
 Firebase API is initially configured within a <script> tag in index.html and implemented in index.js.
 
-Initially, the API is called in index.html:
+Initially, the external API is called in index.html:
 
 
 	<script>
