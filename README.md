@@ -276,7 +276,7 @@ Lastly, all users, regardless of login status, are able to refresh the current p
 
 The post feed content is updated upon submission of a new /createpost POST request.
 
-Within the app, new HTML content is dynamically formatted via the fetch API when GET requests are initiated. A for loop is used to iterate through applicable JSON content, creating a new HTML <div> and filling content where applicable. The Bootstrap-supported modal structure is used to render HTML content upon button click.
+Within the app, new HTML content is dynamically formatted via the fetch API when GET requests are initiated. A for loop is used to iterate through applicable JSON content, creating a new HTML card section and filling content where applicable. The Bootstrap-supported modal structure is used to render HTML content upon button click.
 	
 The presented WebForum app further supports mobile compatability; all content and navigation are responsive to device width.
 
