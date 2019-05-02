@@ -267,5 +267,5 @@ Within the app, new HTML content is dynamically formatted via the fetch API when
 	
 The presented WebForum app further supports mobile compatability; all content and navigation (mobile hamburger) are responsive to device width.
 
-Lastly, the WebForum app is deployed to Heroku cloud deployment service.
+Lastly, the WebForum app is deployed to Heroku cloud deployment service: https://progsumm2.herokuapp.com
 
