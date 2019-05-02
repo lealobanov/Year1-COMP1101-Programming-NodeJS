@@ -54,7 +54,7 @@ User email address and password are collected by the Firebase API, whereas user 
 		
 	}
 	console.log("Request to add new user data sent: " +req.body);
-});
+	});
 
 Alternatively, if the the user is recurring and attempting to access the WebForum service via the login form, a post request is issued to /login:
 
@@ -225,14 +225,39 @@ Searching for users by last name:
 	
 Similarly, with regards to posts, users can search for posts by title:
 
+	app.get("/posts/:posttitle", function(req,res){
+	let index = checkPostExists(req.params.posttitle);
+	if(index !== false){
+		res.send(posts[index]);
+	}else{
+		res.send("No post found with this title.");
+	}
+
+	})
+
 
 As well as search for post by author (email address):
 
+	app.get("/posts/author/:postauthor", function(req,res){
+	let index = checkPostAuthorExists(req.params.postauthor);
+	if(index !== false){
+		res.send(posts[index]);
+	}else{
+		res.send("No post found with this author.");
+	}
 
-Lastly, all users, regardless of login status, are able to refresh the current post feed
+	})
+
+The functions checkUserExists() and checkPostExists() are called to determine whether or not a specific post or user are contained within the JSON object 'users' or 'posts' arrays.
 
 
--- get posts in current feed
+Lastly, all users, regardless of login status, are able to refresh the current post feed:
+
+
+The post feed content is updated upon submission of a new /createpost POST request.
+
+
+
 
 -- formatting html dynamically in get request through fetch (iterating through loops and creating/populating new html divs) 
   -- modal structure
