@@ -111,7 +111,7 @@ const auth = firebase.auth();
 				<!-- Body -->
 				<div class="modal-body">
 						<p style="font-size:16px; margin-top:15px;">Not yet registered? To access our services, create an account with WebForum.</p>
-					<form id="form_register" action="http://127.0.0.1:8090">
+					<form id="form_register" action="/:8090">
             <div class="form-group">
                 <input type="text" class="form-control" placeholder="First Name" id="first_reg" required>
             </div>
@@ -158,7 +158,7 @@ const auth = firebase.auth();
 				<!-- Body -->
 				<div class="modal-body">
             <p style="font-size:16px; margin-top:15px;">Create a new post on WebForum.</p>
-					<form id="form_create_post" action="http://127.0.0.1:8090">
+					<form id="form_create_post" action="/:8090">
 						<div class="form-group">
 							<input type="text" class="form-control" placeholder="Post Title" id="post_title" required>
 						</div>
@@ -209,7 +209,7 @@ const auth = firebase.auth();
 						return document.getElementById('usersearchquery').value;
 						}
 						document.getElementById('useremailsearchbtn').addEventListener('click', async function(event){
-						url = 'http://127.0.01:8090/users/'
+						url = '/users/'
 						queried = searchUsersbyEmail()
 						
 						let response = await fetch(url+queried);
@@ -245,7 +245,7 @@ const auth = firebase.auth();
 			return document.getElementById('usersearchquery').value;
 			}
 			document.getElementById('userfnamesearchbtn').addEventListener('click', async function(event){
-			url = 'http://127.0.01:8090/users/fname/'
+			url = '/users/fname/'
 			queried = searchUsersbyFName()
 			
 			let response = await fetch(url+queried);
@@ -281,7 +281,7 @@ const auth = firebase.auth();
 					return document.getElementById('usersearchquery').value;
 					}
 					document.getElementById('userlnamesearchbtn').addEventListener('click', async function(event){
-					url = 'http://127.0.01:8090/users/lname/'
+					url = '/users/lname/'
 					queried = searchUsersbyLName()
 					
 					let response = await fetch(url+queried);
@@ -424,7 +424,7 @@ const auth = firebase.auth();
 			return document.getElementById('postsearchquery').value;
 			}
 			document.getElementById('postnamesearchbtn').addEventListener('click', async function(event){
-			url = 'http://127.0.01:8090/posts/'
+			url = '/posts/'
 			queried = searchPostsbyName()
 			
 			let response = await fetch(url+queried);
@@ -461,7 +461,7 @@ const auth = firebase.auth();
 				return document.getElementById('postsearchquery').value;
 				}
 				document.getElementById('postauthorsearchbtn').addEventListener('click', async function(event){
-				url = 'http://127.0.01:8090/posts/author/'
+				url = '/posts/author/'
 				queried = searchPostsbyAuthor()
 		
 				
