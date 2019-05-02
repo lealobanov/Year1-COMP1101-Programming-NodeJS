@@ -2,7 +2,7 @@
   "name": "progsummative0205",
   "version": "1.0.0",
   "description": "Programming summative assignment 02/05",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "jest",
     "start": "node server.js"
