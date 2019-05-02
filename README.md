@@ -4,6 +4,8 @@ May 2, 2019
 
 Programming Summative Assignment 2
 
+The app is also deployed to Heroku cloud deployment service: https://progsumm2.herokuapp.com
+
 The following documentation outlines an ansynchronous, dynamic single page app integrating HTML/CSS styling with server/client-side communication via Javascript. Node JS was used to facilitate server side communication through Javascript; the fetch protocol and notion of a REST API was used to transmit JSON content to the client side, and dynamically render it in HTML format.
 
 The proposed application handles two entities: users and blog posts.
