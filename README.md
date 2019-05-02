@@ -87,7 +87,7 @@ document.getElementById('form_login').addEventListener('submit', async function(
 	});
 
 
-Firebase API is configured within a <script> tag in index.html and implemented in index.js.
+Firebase API is initially configured within a <script> tag in index.html and implemented in index.js.
 
 Initially, the API is called in index.html:
 
@@ -124,6 +124,22 @@ In index. js, the API initialized through a real time listener for authenticatio
  	 }
 	});
 
+
+User logged-in and registration status are regulated via the following commands:
+
+	btnRegister.addEventListener('click', e => {
+  	const email = txtEmail_Reg.value;
+  	const pass = txtPassword_Reg.value;
+  	const promise = auth.createUserWithEmailAndPassword(email,pass);
+  	promise.catch(e => console.log(e.message));
+
+	});
+	btnLogin.addEventListener('click', e => {
+  	const email = txtEmail.value;
+  	const pass = txtPassword.value;
+  	const promise = auth.signInWithEmailAndPassword(email,pass);
+  	promise.catch(e => console.log(e.message));
+	});
 
 On submit of the /newuser or /login posts request, both the login and user registration forms assign a temporary 'current user' value. This value is used to list appropriate data under 'My Posts' and properly accredit the post author when a new post is created in the system.
 
@@ -251,20 +267,13 @@ As well as search for post by author (email address):
 The functions checkUserExists() and checkPostExists() are called to determine whether or not a specific post or user are contained within the JSON object 'users' or 'posts' arrays.
 
 
-Lastly, all users, regardless of login status, are able to refresh the current post feed:
-
+Lastly, all users, regardless of login status, are able to refresh the current post feed upon button click to 'Refresh Post Feed', initiating a GET request to /posts.
 
 The post feed content is updated upon submission of a new /createpost POST request.
 
+Within the app, new HTML content is dynamically formatted via the fetch API when GET requests are initiated. A for loop is used to iterate through applicable JSON content, creating a new HTML <div> and filling content where applicable. The Bootstrap-supported modal structure is used to render HTML content upon button click.
+	
+The presented WebForum app further supports mobile compatability; all content and navigation are responsive to device width.
 
-
-
--- formatting html dynamically in get request through fetch (iterating through loops and creating/populating new html divs) 
-  -- modal structure
-  -- bootstrap styling
-    -- handles mobile support 
-  
--- cloud deployment via heroku
-
-** when testing done: what test cases were addressed (eg what form inputs were not allowed + why)
+Lastly, the WebForum app is deployed to Heroku cloud deployment service.
 
