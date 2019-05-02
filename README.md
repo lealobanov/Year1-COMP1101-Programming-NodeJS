@@ -21,7 +21,7 @@ Simultaneously, the Firebase API user authentication service collects data that 
 User registration is handled by a POST request denoted /create post, which is executed upon completing the create post field.
 User email address and password are collected by the Firebase API, whereas user first/last name and bio are used to complete the user's WebForum profile.
 
-'''
+'
 //Collect user data upon registration (user authentication handled by Google Firebase Auth API)
 app.post('/newuser', function(req,res){
 	
@@ -77,7 +77,7 @@ firebase.initializeApp(config);
 const auth = firebase.auth();
 </script>
 
-'''
+'
 
 In index. js,
 
