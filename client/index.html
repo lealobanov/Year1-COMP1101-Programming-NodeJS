@@ -215,6 +215,7 @@ const auth = firebase.auth();
 						let response = await fetch(url+queried);
 						let body = await response.text();
 						let userlist = [JSON.parse(body)];
+
 						if (userlist[0].nonefound == "No user found with this email address.") {
 					$("#search_resultsuseremail").html("");
 					search_resultsuseremail.innerHTML += `
@@ -250,6 +251,7 @@ const auth = firebase.auth();
 			let response = await fetch(url+queried);
 			let body = await response.text();
 			let userlist = [JSON.parse(body)];
+
 			if (userlist[0].nonefound == "No user found with this first name.") {
 					$("#search_resultsuserfname").html("");
 					search_resultsuserfname.innerHTML += `
@@ -257,6 +259,7 @@ const auth = firebase.auth();
 					<p>No users found with this first name.</p>`
 				}
 				else{
+
   		$("#search_resultsuserfname").html("");
   		for(let i = 0; i < userlist.length; i++){
 				search_resultsuserfname.innerHTML += `
@@ -284,6 +287,7 @@ const auth = firebase.auth();
 					let response = await fetch(url+queried);
 					let body = await response.text();
 					let userlist = [JSON.parse(body)];
+
 					if (userlist[0].nonefound == "No user found with this last name.") {
 					$("#search_resultsuserlname").html("");
 					search_resultsuserlname.innerHTML += `
@@ -467,6 +471,7 @@ const auth = firebase.auth();
 				console.log(body)
 				let postlist = [JSON.parse(body)];
 				console.log(postlist, postlist)
+
 				if (postlist[0].nonefound == "No post found with this author.") {
 					$("#search_resultspostauthor").html("");
 					search_resultspostauthor.innerHTML += `

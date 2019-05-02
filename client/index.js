@@ -240,7 +240,11 @@ document.getElementById('postfeed').addEventListener('click', async function(eve
           <h6 class="card-subtitle mb-2 text-muted"><strong> ${postlist[i].postdate}</strong></h6>
           <p>${postlist[i].postcontent}</p>
           
+
         </div>
         </div>`
   }
 });
+
+
+
