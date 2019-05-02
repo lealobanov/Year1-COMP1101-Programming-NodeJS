@@ -141,6 +141,9 @@ User logged-in and registration status are regulated via the following commands:
   	promise.catch(e => console.log(e.message));
 	});
 
+Given the asynchronous nature of this app and the lack of external database support, ---. For demonstration purposes, existing users listed in app.js have also been registered in Firebase.
+
+
 On submit of the /newuser or /login posts request, both the login and user registration forms assign a temporary 'current user' value. This value is used to list appropriate data under 'My Posts' and properly accredit the post author when a new post is created in the system.
 
 Upon registering to the WebForum system, the user can proceed to create a new blog post to be posted on the service. A new post is issued via a /createpost POST request:
