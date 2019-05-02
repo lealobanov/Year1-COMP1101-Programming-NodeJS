@@ -177,7 +177,11 @@ Similarly, to generate the current post library,  a GET request to /users is iss
 	res.send(posts)
 	});
 	
-The current logged-in user can also generate a library of their personal posts in the 'My Library'  
+The current logged-in user can also generate a library of their personal posts via a GET request to /myposts in the 'My Library' modal:
+
+	app.get("/myposts/", function(req,res) {
+	res.send(my_posts)
+	});
 
 Additionally, users can search for individual users or posts depending on user email address, first name, or last name, as well as post title and post author.
 
