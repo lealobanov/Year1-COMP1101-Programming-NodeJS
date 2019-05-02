@@ -18,78 +18,72 @@ User registration and login are performed via indepent POST requests handled in 
 
 Simultaneously, the Firebase API user authentication service collects data that the user inputs into the email address and password fields. 
 
-User registration is handled by a POST request denoted /create post, which is executed upon completing the create post field.
+User registration is handled by a POST request denoted /newuser, which is executed upon submitting the user registration form.
 User email address and password are collected by the Firebase API, whereas user first/last name and bio are used to complete the user's WebForum profile.
 
 	//Collect user data upon registration (user authentication handled by Google Firebase Auth API)
 	app.post('/newuser', function(req,res){
 	
-  	if(checkUserExists(req.body.username) !== false){
-		res.send(400);
-  	  res.send("A user with this username already exists. Please try again.");
+    if(checkUserExists(req.body.username) !== false){
+        res.send(400);
+        res.send('A user with this username already exists. Please try again.');
     
-	}else if(!req.body.username || !req.body.fname || !req.body.lname || !req.body.password || !req.body.confirmpass){
-    res.send("Form fields missing. Please complete all fields.");
+    }else if(!req.body.username || !req.body.fname || !req.body.lname || !req.body.password || !req.body.confirmpass){
+        res.send('Form fields missing. Please complete all fields.');
     
-	}else if(req.body.password != req.body.confirmpass){
-    res.send("Passwords do not match. Please try again.");
+    }else if(req.body.password != req.body.confirmpass){
+        res.send('Passwords do not match. Please try again.');
     
-	}else{
+    }else{
 		
-		current_user.push(req.body.username);
+        current_user.push(req.body.username);
 
-		let user = {
-			fname: req.body.fname,
-      lname: req.body.lname,	
-			username: req.body.username,
-			bio: req.body.bio
-		};
+        let user = {
+            fname: req.body.fname,
+            lname: req.body.lname,	
+            username: req.body.username,
+            bio: req.body.bio
+        };
 
-		users.push(user);
-		
-	
-		res.send(true);
-		console.log('Added new user');
+        users.push(user);	
+        res.send(true);     
 		
 		
-	}
-	console.log("Request to add new user data sent: " +req.body);
+  	  }
+
 	});
 
 Alternatively, if the the user is recurring and attempting to access the WebForum service via the login form, a post request is issued to /login:
 
-	document.getElementById('form_login').addEventListener('submit', async function(event){
-		event.preventDefault();
+	//Post user profile data upon login
+	app.post('/login', function(req,res){
 	
-	try{
-			let data = {
-				 "username" : document.getElementById('username_login').value,
-					}
-	
-		let response = await fetch('http://127.0.01:8090/login',
-															 {
-																 method: "POST",
-																 headers: {
-																	 "Content-Type": "application/json"
-																 },
-																 body: JSON.stringify(data),
-																 
-                                });
-    console.log('response', response)                     
-		if(!response.ok){
-			throw new Error("Encountered error when logging in. Please ensure that all fields are completed.");
-    }
+    if(checkUserExists(req.body.username) !== false){
+        current_user.push(req.body.username);
     
-	} catch (error) {
-		alert ("Problem: " + error);
-	}
- 	 console.log('Fetch happened')
+    } else if (!req.body.username || !req.body.password ){
+        res.send(400);
+        res.send('Form fields missing. Please complete all fields.');
+    }
+    else {
+        current_user.push(req.body.username);
+      
+        let user = {
+            fname: 'Null',
+            lname: 'Null',	
+            username: req.body.username,
+            bio: 'This user was registered and authenticated by Firebase during a previous server session.'
+        };
+        users.push(user);
+
+        
+    }
 	});
 
 
-Firebase API is initially configured within a <script> tag in index.html and implemented in index.js.
+Firebase API user authentication is initially configured within a <script> tag in index.html and implemented in index.js.
 
-Initially, the external API is called in index.html:
+Initially, the external API is called and setup in index.html:
 
 
 	<script>
@@ -106,7 +100,7 @@ Initially, the external API is called in index.html:
 	const auth = firebase.auth();
 	</script>
 
-In index. js, the API initialized through a real time listener for authentication state change (logged in/logged out). Upon logging into the server, post methods are enabled such that a logged in user has the capability to initialize a new forum post.
+In index. js, the API is initialized through a real time listener for authentication state change (logged in/logged out). Upon logging into the server, post methods are enabled such that a logged in user has the capability to initialize a new forum post.
 
 
 	auth.onAuthStateChanged(firebaseUser => {
@@ -125,7 +119,7 @@ In index. js, the API initialized through a real time listener for authenticatio
 	});
 
 
-User logged-in and registration status are regulated via the following commands:
+User logged-in and registration status are regulated via the following commands, which execute on submit of the user registration and login forms, respectively:
 
 	btnRegister.addEventListener('click', e => {
   	const email = txtEmail_Reg.value;
@@ -145,41 +139,35 @@ Given the asynchronous nature of this app and the lack of external database supp
 
 In order to initiate a new forum post, user login must be successfully handled by the Firebase API. If proper authentication does not occur, the button to create a new WebForum post is not visible and hence not clickable for the user; the user cannot physically initiate a /createpost POST request without prior authentication from the Firebase API.
 
-
 On submit of the /newuser or /login posts request, both the login and user registration forms assign a temporary 'current user' value. This value is used to list appropriate data under 'My Posts' and properly accredit the post author when a new post is created in the system.
 
 Upon registering to the WebForum system, the user can proceed to create a new blog post to be posted on the service. A new post is issued via a /createpost POST request:
  
- 	/Post new forum post to post library (authentication required to execute post)
-
-	document.getElementById('form_create_post').addEventListener('submit', async function(event){
-  	event.preventDefault();
-  
- 	 try{
-      	let data = {
-         "posttitle" : document.getElementById('post_title').value,
-         "postdate": document.getElementById('date').value,
-         "postcontent": document.getElementById('post_content').value
-          }
-  
-    	let response = await fetch('http://127.0.01:8090/createpost',
-                               {
-                                 method: "POST",
-                                 headers: {
-                                   "Content-Type": "application/json"
-                                 },
-                                 body: JSON.stringify(data),
-                                 
-                                });
-    	if(!response.ok){
-      	console.log(response.code)
-      	throw new Error("Encountered error creating new post. A post with this title already exists in the post library.");
-    	}
-  	} catch (error) {
-  	  alert ("Problem: " + error);
-  	}
-  	console.log('Fetch happened')	
+ 	// Create a new forum post
+	app.post('/createpost',function(req,resp){
+	
+    if(!req.body.posttitle || !req.body.postdate || !req.body.postcontent ){
+		
+        resp.send(400);
+        resp.send('Form fields missing. Please try again.');
+    }else if (checkPostExists(req.body.posttitle) !== false){
+        resp.status(400);
+        resp.send('A post with this title already exists in the system. Please try again.');
+	
+    }else{
+        let post= {
+            posttitle: req.body.posttitle,
+            postauthor: current_user[0],
+            postdate: req.body.postdate,
+            postcontent: req.body.postcontent,
+        };
+		
+        posts.push(post);
+        my_posts.push(post);
+		
+    }
 	});
+
 
 
 Further, all users of the site (regardless of login status) can perform GET requests which generate lists of all users and posts currently hosted by the WebForum site. 
@@ -206,7 +194,7 @@ The current logged-in user can also generate a library of their personal posts v
 
 Additionally, users can search for individual users or posts depending on user email address, first name, or last name, as well as post title and post author.
 
-A JavaScript function inititalized in index.html is used to dynamically pull text content from a search query field upon button click. When this information is collected, a GET request is initialized to retrieve user- or post- specific data. Each GET request for /users and /posts is subseqeuntly renderend in a dyanmic HTML modal:
+A JavaScript function inititalized in index.html is used to dynamically pull text content from a search query field upon button click. When this information is collected, a GET request is initialized to retrieve user- or post- specific data. Each GET request for /users and /posts is subseqeuntly renderend in a dynamic HTML modal:
 
 For example, searching for users by username (email address):
 
@@ -269,8 +257,7 @@ As well as search for post by author (email address):
 
 	})
 
-The functions checkUserExists() and checkPostExists() are called to determine whether or not a specific post or user are contained within the JSON object 'users' or 'posts' arrays.
-
+The functions checkUserExists() and checkPostExists() are called to determine whether or not a specific post or user are contained as an existing JSON object within the 'users' or 'posts' arrays.
 
 Lastly, all users, regardless of login status, are able to refresh the current post feed upon button click to 'Refresh Post Feed', initiating a GET request to /posts.
 
@@ -278,7 +265,7 @@ The post feed content is updated upon submission of a new /createpost POST reque
 
 Within the app, new HTML content is dynamically formatted via the fetch API when GET requests are initiated. A for loop is used to iterate through applicable JSON content, creating a new HTML card section and filling content where applicable. The Bootstrap-supported modal structure is used to render HTML content upon button click.
 	
-The presented WebForum app further supports mobile compatability; all content and navigation are responsive to device width.
+The presented WebForum app further supports mobile compatability; all content and navigation (mobile hamburger) are responsive to device width.
 
 Lastly, the WebForum app is deployed to Heroku cloud deployment service.
 
