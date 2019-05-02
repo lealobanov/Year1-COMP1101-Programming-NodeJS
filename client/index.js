@@ -74,7 +74,7 @@ document.getElementById('form_register').addEventListener('submit', async functi
            "bio" : document.getElementById('bio_reg').value
             }
     
-      let response = await fetch('http://127.0.01:8090/newuser',
+      let response = await fetch('/newuser',
                                  {
                                    method: "POST",
                                    headers: {
@@ -103,7 +103,7 @@ document.getElementById('form_login').addEventListener('submit', async function(
 				 "username" : document.getElementById('username_login').value,
 					}
 	
-		let response = await fetch('http://127.0.01:8090/login',
+		let response = await fetch('/login',
 															 {
 																 method: "POST",
 																 headers: {
@@ -135,7 +135,7 @@ document.getElementById('form_create_post').addEventListener('submit', async fun
          "postcontent": document.getElementById('post_content').value
           }
   
-    let response = await fetch('http://127.0.01:8090/createpost',
+    let response = await fetch('/createpost',
                                {
                                  method: "POST",
                                  headers: {
@@ -157,7 +157,7 @@ document.getElementById('form_create_post').addEventListener('submit', async fun
 
 // Dynamically list current user directory
   document.getElementById('listusers').addEventListener('click', async function(event){
-    let response = await fetch('http://127.0.01:8090/users');
+    let response = await fetch('/users');
     let body = await response.text();
     
   
@@ -179,7 +179,7 @@ document.getElementById('form_create_post').addEventListener('submit', async fun
 
 // Dynamically list current post library
 document.getElementById('listposts').addEventListener('click', async function(event){
-  let response = await fetch('http://127.0.01:8090/posts');
+  let response = await fetch('/posts');
   let body = await response.text();
   
 
@@ -202,7 +202,7 @@ document.getElementById('listposts').addEventListener('click', async function(ev
 
 // Dynamically list current user's posts
 document.getElementById('mypostsbtn').addEventListener('click', async function(event){
-  let response = await fetch('http://127.0.01:8090/myposts');
+  let response = await fetch('/myposts');
   let body = await response.text();
   
 
@@ -225,7 +225,7 @@ document.getElementById('mypostsbtn').addEventListener('click', async function(e
 
 // Generate current post feed
 document.getElementById('postfeed').addEventListener('click', async function(event){
-  let response = await fetch('http://127.0.01:8090/posts');
+  let response = await fetch('/posts');
   let body = await response.text();
 
   let postlist = JSON.parse(body);
