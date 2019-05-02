@@ -143,6 +143,8 @@ User logged-in and registration status are regulated via the following commands:
 
 Given the asynchronous nature of this app and the lack of external database support, registered users are retained within Firebase API, regardless of server restart. For demonstration purposes, existing users listed in app.js have also been pre-registered in the Firebase API authentication service. Assuming functionality on a live web hosting service with access to a database, registered user data will be retained between server reloads in the event that a recurring user login occurs. 
 
+In order to initiate a new forum post, user login must be successfully handled by the Firebase API. If proper authentication does not occur, the button to create a new WebForum post is not visible and hence not clickable for the user; the user cannot physically initiate a /createpost POST request without prior authentication from the Firebase API.
+
 
 On submit of the /newuser or /login posts request, both the login and user registration forms assign a temporary 'current user' value. This value is used to list appropriate data under 'My Posts' and properly accredit the post author when a new post is created in the system.
 
