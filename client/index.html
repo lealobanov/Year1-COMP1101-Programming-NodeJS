@@ -76,7 +76,7 @@ const auth = firebase.auth();
 				<!-- Body -->
 				<div class="modal-body">
             <p style="font-size:16px; margin-top:15px;">If you are an existing user, please login below.</p>
-					<form id="form_login" action="http://127.0.0.1:8090">
+					<form id="form_login" action=":8090">
 						<div class="form-group">
 							<input type="email" class="form-control" placeholder="Email" id="username_login" required>
 						</div>
@@ -111,7 +111,7 @@ const auth = firebase.auth();
 				<!-- Body -->
 				<div class="modal-body">
 						<p style="font-size:16px; margin-top:15px;">Not yet registered? To access our services, create an account with WebForum.</p>
-					<form id="form_register" action="/:8090">
+					<form id="form_register">
             <div class="form-group">
                 <input type="text" class="form-control" placeholder="First Name" id="first_reg" required>
             </div>
